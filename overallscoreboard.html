@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+		<title></title>
+
+		<!-- Bootstrap -->
+		<link href="bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet">
+		<link href="overallscoreboard/khand/khand.css" rel="stylesheet">
+		<link href="fieldscoreboard/css/animate.css" rel="stylesheet">
+		<style>
+			html, body {  padding: 0;  margin: 0px;}
+
+			.container-fluid {
+				padding-left: 0;
+				padding-right: 0;
+			}
+			table {
+				background-color: rgba(51, 51, 51, 0.96);
+				font-size: 55px;
+				font-weight: bold;
+				color: white;
+			}
+
+			.table>tbody>tr>td {
+				padding: 0 8px;
+				border: 0;
+				line-height: 75px;
+			}
+
+			/* Black - table rows */
+			table thead, tr, td {
+				background-color: black;
+				color: white;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+			}
+
+			tbody td {
+				/*color: rgb( 234, 117, 0 );*/
+				color: white;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+			}
+
+			/* background image */
+			body {
+				background: black;
+				font-family: 'Arial', sans-serif;
+			}
+
+			.table-container {
+				overflow-y: auto;
+			}
+
+			::-webkit-scrollbar {
+				width: 0px;  /* remove scrollbar space */
+				background: transparent;  /* optional: just make scrollbar invisible */
+			}
+
+		</style>
+	</head>
+	<body>
+		<div id="atletieknu-settings" data-max-athletes-per-page="8" data-time-per-page="5000" data-isfieldscoreboard="0" data-time-per-initialpage="15000"></div>
+		<div class="container-fluid">
+		  <div class="row">
+			<div class="col-sm-12 main">
+				<div id="container1">
+				  <div class="table-container">
+					<table class="table table-striped">
+					  <thead>
+						<tr>
+						  <th colspan="4">{startlist.startlijst_naam}</th>
+						</tr>
+					  </thead>
+					  <tbody class="slideInOutOnChange">
+						<tr rv-each-rank="startlistRanks">
+						  	<td>{ rank.deelnemer_rank }</td>
+							<td><span class="hidden-xs hidden-sm">{ rank.deelnemer_naam | upper }</span><span class="visible-xs visible-sm">{ rank.persoonsgegeven_achternaam | upper }</span></td>
+							<td class="hidden-xs hidden-sm hidden-md">{ rank.vereniging_afkorting }</td>
+						 	<td>{ rank.deelnemer_bestscore }</td>
+						</tr>
+					  </tbody>
+					  <tfoot>
+					  	<tr>
+							<td colspan="4"><img src="../assets/app-icon/png/athletics.app logo_green.png" height="80px"> {event.event_naam}</td>
+					  	</tr>
+					  </tfoot>
+					</table>
+				  </div>
+				</div>
+			</div>
+		  </div>
+		</div>
+		
+		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+		<script src="bootstrap-3.3.7/js/jquery-3.1.1.min.js"></script>
+		<!-- Include all compiled plugins (below), or include individual files as needed -->
+		<script src="bootstrap-3.3.7/js/bootstrap.min.js"></script>
+		<script src="overallscoreboard/js/moment.js"></script>
+		<script src="overallscoreboard/js/sightglass.js"></script>
+		<script src="overallscoreboard/js/rivets.js"></script>
+		<script src="overallscoreboard/js/rivetsstdlib.js"></script>
+		<script src="overallscoreboard/js/script.js"></script>
+	</body>
+</html>

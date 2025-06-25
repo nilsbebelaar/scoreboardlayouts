@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+		<title></title>
+
+		<!-- Bootstrap -->
+		<link href="bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet">
+		<link href="timing-largescoreboard/khand/khand.css" rel="stylesheet">
+		<link href="timing-largescoreboard/css/animate.css" rel="stylesheet">
+		<style>
+			html, body {  padding: 0;  margin: 0px;}
+
+			.container-fluid {
+				padding-left: 0;
+				padding-right: 0;
+			}
+			table {
+				background-color: rgba(51, 51, 51, 0.96);
+				font-size: 55px;
+				font-weight: bold;
+				color: white;
+				margin-top: 95px;
+			}
+
+			.table>tbody>tr>td {
+				padding: 0 8px;
+				border: 0;
+				line-height: 75px;
+			}
+
+			/* Black - table rows */
+			table thead, tr, td {
+				background-color: #10103a;
+				color: white;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				border-bottom: 5px solid rgb(189, 188, 188);
+			}
+
+			tbody td {
+				/*color: rgb( 234, 117, 0 );*/
+				color: white;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+			}
+
+			/* background image */
+			body {
+				background: black;
+				font-family: 'Arial', sans-serif;
+
+				height: 100vh;
+				overflow: auto;
+			}
+
+			table thead tr {
+				 position: fixed;
+				width: 100%;
+				top: 0;
+			}
+
+			table thead tr th {
+				width: 100%;
+				display: inline-block;
+			}
+
+			.table-container {
+				overflow-y: auto;
+			}
+
+			.name-col {
+				max-width: 700px;
+			}
+
+			.vereniging-col {
+				max-width: 400px;
+			}
+
+			.rank-col {
+				background: yellow;
+				color: black;
+				font-weight: normal;
+				text-align: center;
+			}
+
+			.result-col {
+				background: black;
+				text-align: right;
+			}
+
+			.trapezoid {
+				border-bottom: 65px solid white;
+				border-left: 15px solid transparent;
+				border-right: 15px solid transparent;
+				height: 0;
+				width: 60px;
+				color: black;
+				text-align: center;
+				margin: 5px 0;
+				font-weight: bold;
+				line-height: 65px;
+				font-size: 45px;
+				display: none;
+			}
+
+			.showtrapezoid .trapezoid {
+				display: block;
+			}
+
+			.showtrapezoid .bibnumber {
+				display: none;
+			}
+
+			.runningTime {
+				float: right;
+			}
+
+			.arrivalTime {
+				color: white;
+				font-size: 140px;
+				width: 100%;
+				height: 100vh;
+				position: absolute;
+				left: 0;
+				text-align: center;
+				z-index: 2;
+				line-height: 80vh;
+				-webkit-text-stroke: 2px black;
+				font-weight: bold;
+			}
+
+			.reacttime-bar {
+				/*background: white;*/
+				height: 60px;
+				margin-top: 7px;
+				border-radius: 5px;
+				font-size: 40px;
+				/*color: darkblue;*/
+				line-height: 60px;
+				display: none;
+				padding-left: 10px;
+				background: red;
+				color: white;
+				width: 1px;
+			}
+			/* Very simple line for 0.1sec */
+			/*.reacttime-bar:before {
+				border: 1px solid darkblue;
+				width: 5px;
+				height: 100%;
+				content: "";
+				left: 200px;
+				position: relative;
+			}*/
+
+			.isnotfalsestart {
+				background: #3fb909;
+				color: white;
+			}
+
+			.showreacttimes .reacttime-bar {
+				display: block;
+			}
+
+			.minreactline {
+				width: 7px;
+				position: fixed;
+				background: #3fb909;
+				left: calc( 916px + 200px);
+				top: 0;
+				bottom: 0;
+				z-index: 10;
+				margin-top: 90px;
+				border: 2px solid black;
+			}
+			.minreactline:before {
+				content: "0.1";
+				background: #3fb909;
+				color: white;
+				font-size: 40px;
+				padding: 10px;
+				border-radius: 5px;
+				top: -60px;
+				position: relative;
+				left: -35px;
+				font-weight: bold;
+			}
+
+			.arrivalTime-content {
+				z-index: 3;
+				position: relative;
+			}
+
+			.bg-image {
+				background: rgba(0, 0, 0, 0.5);
+				width: 100%;
+				height: 100%;
+				position: absolute;
+				z-index: 1;
+				padding-top: 150px;
+			}
+
+			.photofinish-image {
+				width: 100%;
+				height: 100%;
+				background-repeat: no-repeat;
+				background-position: center top;
+				background-size: contain;
+				z-index: 1;
+				position: absolute;
+			}
+
+			.officialTxt {
+				font-size: 100px;
+			}
+
+			.blurred, .blurredannouncement, .blurredfinishphoto {
+				filter: blur(8px);
+				-webkit-filter: blur(8px);
+			}
+
+			::-webkit-scrollbar {
+				width: 0px;  /* remove scrollbar space */
+				background: transparent;  /* optional: just make scrollbar invisible */
+			}
+
+			@media (max-width: 1900px) {
+				.arrivalTime {
+					font-size: 100px;
+				}
+				.bg-image {
+					padding-top: 100px;
+				}
+			}
+			@media (max-width: 1270px) {
+				.arrivalTime {
+					font-size: 80px;
+				}
+				.bg-image {
+					padding-top: 100px;
+				}
+			}
+
+		</style>
+	</head>
+	<body>
+		<div id="atletieknu-settings" data-time-per-page="5000" data-isfieldscoreboard="0" data-time-per-initialpage="15000" data-page-scroll-pixels-deduction="90"></div>
+
+		<div class="arrivalTime" rv-show="showArrivalTime">
+			<div class="bg-image officialTxt">Onofficieel</div>
+			<div class="arrivalTime-content">
+				{arrivalTime}
+			</div>
+		</div>
+
+		<div class="arrivalTime" rv-show="nextHeatAnnouncement">
+			<div class="bg-image">{startlist.startlijst_naam}</div>
+			<div class="arrivalTime-content officialTxt">
+				Volgende serie
+			</div>
+		</div>
+
+		<div class="arrivalTime" rv-show="showFinishPhoto">
+			<div class="bg-image"></div>
+			<div class="photofinish-image" rv-style-background-image="lastImageFileName"></div>
+		</div>
+
+		<div class="container-fluid" rv-class-blurred="showArrivalTime" rv-class-blurredannouncement="nextHeatAnnouncement" rv-class-blurredfinishphoto="showFinishPhoto">
+			<div class="minreactline"></div>
+			<div class="row">
+				<div class="col-sm-12 main">
+					<div id="container1">
+						<div class="table-container">
+							<table class="table table-striped" rv-show="showNextHeat" rv-class-showtrapezoid="startInLanes" rv-class-showreacttimes="showReactTimes">
+								<thead>
+									<tr>
+										<th colspan="4">{startlist.startlijst_naam} <span class="runningTime">{runningTime}</span></th>
+									</tr>
+								</thead>
+								<tbody class="slideInOutOnChange">
+									<tr rv-each-rank="startlistAthletes">
+										<td>
+											<div class="trapezoid">{ rank.lane_number }</div>
+											<div class="bibnumber">{ rank.bib_number }</div>
+										</td>
+										<td class="name-col"><span class="hidden-xs hidden-sm">{ rank.deelnemer_naam | upper }</span><span class="visible-xs visible-sm">{ rank.persoonsgegeven_achternaam | upper }</span></td>
+										<td class="hidden-xs hidden-sm hidden-md vereniging-col">{ rank.vereniging_afkorting }</td>
+										<td>
+											<div class="reacttime-bar" rv-show="rank.react_time" rv-style-width="rank.react_time | multiply 2000 | add 'px'" rv-class-isnotfalsestart="rank.react_time | multiply 10 | gt 1">{ rank.react_time }</div>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+
+							<table class="table table-striped" rv-show="showHeatResults">
+								<thead>
+									<tr>
+										<th colspan="4">{startlist.startlijst_naam} <span class="runningTime">{runningTime}</span></th>
+									</tr>
+								</thead>
+								<tbody class="slideInOutOnChange">
+									<tr rv-each-rank="startlistRanks">
+										<td class="rank-col">{ rank.deelnemer_rank }</td>
+										<td class="name-col"><span class="hidden-xs hidden-sm">{ rank.deelnemer_naam | upper }</span><span class="visible-xs visible-sm">{ rank.persoonsgegeven_achternaam | upper }</span></td>
+										<td class="hidden-xs hidden-sm hidden-md vereniging-col">{ rank.vereniging_afkorting }</td>
+										<td class="result-col">{ rank.deelnemer_bestscore }</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+		<script src="bootstrap-3.3.7/js/jquery-3.1.1.min.js"></script>
+		<!-- Include all compiled plugins (below), or include individual files as needed -->
+		<script src="bootstrap-3.3.7/js/bootstrap.min.js"></script>
+		<script src="timing-largescoreboard/js/moment.js"></script>
+		<script src="timing-largescoreboard/js/sightglass.js"></script>
+		<script src="timing-largescoreboard/js/rivets.js"></script>
+		<script src="timing-largescoreboard/js/rivetsstdlib.js"></script>
+		<script src="timing-largescoreboard/js/script.js"></script>
+	</body>
+</html>

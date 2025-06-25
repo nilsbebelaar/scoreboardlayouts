@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+		<title></title>
+
+		<!-- Bootstrap -->
+		<link href="bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet">
+		<link href="overallscoreboard/khand/khand.css" rel="stylesheet">
+		<link href="fieldscoreboard/css/animate.css" rel="stylesheet">
+		<style>
+			html {
+				background: black;
+			}
+			html, body {
+				padding: 0;
+				margin: 0px;
+				min-height: 720px;
+				min-width: 1280px;
+			}
+			table {
+				/*background-color: rgba(51, 51, 51, 0.96);*/
+				font-size: 55px;
+				font-weight: bold;
+				color: white;
+			}
+
+			.table>tbody>tr>td {
+				padding: 0 8px;
+				border: 0;
+				line-height: 75px;
+			}
+
+			/* Black - table rows */
+			table thead, tr, td {
+				/*background-color: black;*/
+				color: white;
+			}
+
+			tbody td {
+				color: rgb( 234, 117, 0 );
+			}
+
+			/* Orange / Black - table rows */
+			/*
+			table thead {
+			    background-color: rgba(255, 144, 13, 0.99);
+				color: black;
+			}
+			
+			.table-striped>tbody>tr:nth-of-type(even) {
+			    background-color: rgba(255, 144, 13, 0.96);
+				color: black;
+			}
+
+			.table-striped>tbody>tr:nth-of-type(odd) {
+				background-color: rgba(51, 51, 51, 0.96);
+			}
+			*/
+
+			/* background image */
+			body {
+				background: url( "nkatletiek-overallscoreboard/Achtergrond NK Atletiek Technische onderdelen.png" );
+				background-size: 1280px 720px;
+
+				background-repeat: no-repeat;
+
+				font-family: 'Arial', sans-serif;
+				font-weight: bold;;
+			}
+
+			#header1 {
+				color: black;
+				font-size: 56px;
+				left: 150px;
+				position: relative;
+				top: 30px;
+			}
+
+			.spanrow {
+				line-height: 75px;
+				position: relative;
+				top: 10px;
+				font-size: 50px;
+				color: black;
+				left: 110px;
+
+				list-style-type: none !important;
+				margin: 0;
+				padding: 0;
+			}
+
+			.spancol1 {
+				display: inline-block;
+				width: 60px;
+				overflow:hidden;
+				white-space: nowrap;
+			}
+
+			.spancol2 {
+				display: inline-block;
+				width: 740px;
+				text-overflow: ellipsis;
+				overflow:hidden;
+				white-space: nowrap;
+			}
+
+			.spancol3 {
+				display: inline-block;
+				width: 340px;
+				text-overflow: ellipsis;
+				overflow:hidden;
+				white-space: nowrap;
+			}
+
+			.spancol4 {
+				display: inline-block;
+				width: 150px;
+				overflow:hidden;
+				white-space: nowrap;
+			}
+
+			.spantablecontainer {
+				position: relative;
+				top: 50px;
+				list-style-type: none !important;
+			}
+
+			::-webkit-scrollbar {
+				width: 0px;  /* remove scrollbar space */
+				background: transparent;  /* optional: just make scrollbar invisible */
+			}
+
+		</style>
+	</head>
+	<body>
+		<div id="atletieknu-settings" data-max-athletes-per-page="6" data-time-per-page="5000" data-isfieldscoreboard="0" data-time-per-initialpage="15000"></div>
+		<div class="container-fluid">
+		  <div class="row">
+			<div class="col-sm-12 main">
+				<div id="container1">
+					<div id="header1">
+						{startlist.startlijst_naam}
+					</div>
+				  <div class="spantablecontainer">
+					<ul>
+						<li rv-each-rank="startlistRanks" class="spanrow">
+							<span class="spancol1">{ rank.deelnemer_rank }</span>
+							<span class="spancol2">{ rank.deelnemer_naam | upper }</span>
+							<span class="spancol4">{ rank.deelnemer_bestscore }</span>
+						</li>
+					</ul>
+				  </div>
+				</div>
+			</div>
+		  </div>
+		</div>
+		
+		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+		<script src="bootstrap-3.3.7/js/jquery-3.1.1.min.js"></script>
+		<!-- Include all compiled plugins (below), or include individual files as needed -->
+		<script src="bootstrap-3.3.7/js/bootstrap.min.js"></script>
+		<script src="overallscoreboard/js/moment.js"></script>
+		<script src="overallscoreboard/js/sightglass.js"></script>
+		<script src="overallscoreboard/js/rivets.js"></script>
+		<script src="overallscoreboard/js/rivetsstdlib.js"></script>
+
+		<script src="bootstrap-3.3.7/js/jquery.floatThead.js"></script>
+		<script src="overallscoreboard/js/script.js"></script>
+	</body>
+</html>

@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en" style="display: none;">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+		<title></title>
+
+		<!-- Bootstrap -->
+		<link href="bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet">
+		<link href="fieldscoreboard-longjump-768-96/khand/khand.css" rel="stylesheet">
+		<link href="fieldscoreboard-longjump-768-96/css/scroller.css" rel="stylesheet">
+		<link href="fieldscoreboard-longjump-768-96/css/newsscroller.css" rel="stylesheet">
+		<link href="fieldscoreboard-longjump-768-96/css/animate.css" rel="stylesheet">
+		<style>
+			html, body {
+				width: 1000px;
+				height: 96px;
+				margin: 0;
+				padding: 0;
+				background-color: green;
+			}
+
+			/* Athlete markup */
+			.athleteInfoContainer {
+				height: 28px;
+				background: #E35300;
+				font-size: 30px;
+				color: white;
+				border-bottom: 2px solid #424242;
+			}
+			.athleteInfo {
+				height: 33px;
+				background: #E35300;
+				top: -7px;
+				position: relative;
+			}
+
+			.athlete, .result, .wind {
+				border-left: 3px solid #424242;
+				height: 100%;
+				display: inline-block;
+				padding: 0 7px;
+			}
+
+			/* Pre-event markup */
+			.preEventScroller {
+				height: 68px;
+				background: #E35300;
+				color: white;
+				font-size: 30px;
+			}
+
+			/* Ruler markup */
+			.ruler {
+				position: relative;
+				width: 100%;
+				margin: 0;
+				height: 68px;
+				background: black;
+			}
+			.ruler .cm,
+			.ruler .mm {
+				position: absolute;
+				border-left: 3px solid white;
+				height: 48px;
+				width: 10%;
+				bottom: 0;
+				z-index: 9;
+			}
+			.ruler .mm {
+				width: 20%;
+			}
+			.ruler .cm:after {
+				position: absolute;
+				bottom: 20px;
+				font: 30px/1 sans-serif;
+				color: white;
+				margin-left: 5px;
+			}
+			.ruler .mm {
+				height: 20px;
+				bottom: 0;
+			}
+			.ruler .cm:nth-of-type(1) {
+				left: 0%;
+			}
+			.ruler .cm:nth-of-type(1):after {
+				content: "0";
+			}
+			.ruler .cm:nth-of-type(2) {
+				left: 10%;
+			}
+			.ruler .cm:nth-of-type(2):after {
+				content: "1";
+			}
+			.ruler .cm:nth-of-type(3) {
+				left: 20%;
+			}
+			.ruler .cm:nth-of-type(3):after {
+				content: "2";
+			}
+			.ruler .cm:nth-of-type(4) {
+				left: 30%;
+			}
+			.ruler .cm:nth-of-type(4):after {
+				content: "3";
+			}
+			.ruler .cm:nth-of-type(5) {
+				left: 40%;
+			}
+			.ruler .cm:nth-of-type(5):after {
+				content: "4";
+			}
+			.ruler .cm:nth-of-type(6) {
+				left: 50%;
+			}
+			.ruler .cm:nth-of-type(6):after {
+				content: "5";
+			}
+			.ruler .cm:nth-of-type(7) {
+				left: 60%;
+			}
+			.ruler .cm:nth-of-type(7):after {
+				content: "6";
+			}
+			.ruler .cm:nth-of-type(8) {
+				left: 70%;
+			}
+			.ruler .cm:nth-of-type(8):after {
+				content: "7";
+			}
+			.ruler .cm:nth-of-type(9) {
+				left: 80%;
+			}
+			.ruler .cm:nth-of-type(9):after {
+				content: "8";
+			}
+			.ruler .cm:nth-of-type(10) {
+				left: 90%;
+			}
+			.ruler .cm:nth-of-type(10):after {
+				content: "9";
+			}
+			.ruler .cm:nth-of-type(11) {
+				left: 100%;
+			}
+			.ruler .cm:nth-of-type(11):after {
+				content: "10";
+			}
+			.ruler .mm:nth-of-type(1) {
+				left: 20%;
+			}
+			.ruler .mm:nth-of-type(2) {
+				left: 40%;
+			}
+			.ruler .mm:nth-of-type(3) {
+				left: 60%;
+			}
+			.ruler .mm:nth-of-type(4) {
+				left: 80%;
+			}
+
+			.medal {
+				position: absolute;
+				border-left: 6px solid white;
+				height: 48px;
+				width: 3px;
+				transition: 1s;
+				bottom: 0;
+			}
+
+			.bronze-mm {
+				border-color: #cd7f32;
+				height: 66px;
+				z-index: 5;
+			}
+			.bronze-mm:before {
+				content: "3e";
+				background: #cd7f32;
+				left: -28px;
+				position: relative;
+				color: white;
+				font-weight: bold;
+				top: -2px;
+				padding: 0 3px;
+			}
+
+			.silver-mm {
+				border-color: silver;
+				height: 66px;
+				z-index: 6;
+			}
+			.silver-mm:before {
+				content: "2e";
+				background: silver;
+				left: -28px;
+				position: relative;
+				color: black;
+				font-weight: bold;
+				top: -2px;
+				padding: 0 3px;
+			}
+
+			.gold-mm {
+				border-color: gold;
+				height: 66px;
+				z-index: 7;
+			}
+			.gold-mm:before {
+				content: "1e";
+				background: gold;
+				left: -28px;
+				position: relative;
+				color: black;
+				font-weight: bold;
+				top: -2px;
+				padding: 0 3px;
+			}
+			
+
+			.blue-mm {
+				border-color: blue;
+				height: 66px;
+				z-index: 11;
+			}
+			.blue-mm:before {
+				content: attr(data-position);
+				background: blue;
+				left: -28px;
+				position: relative;
+				color: white;
+				font-weight: bold;
+				top: -2px;
+				padding: 0 3px;
+			}
+
+			.typecursor {
+				animation: blink-caret 1.2s infinite;
+			}
+
+			/* The typing effect */
+			@keyframes blink-caret {
+				50% { opacity: 0.5; }
+			}
+
+			.green-result-mm {
+				width: 0;
+				border-left: 0;
+				border-right: 6px solid green;
+				background: rgba(0, 128, 0, 0.5);
+				z-index: 10;
+			}
+			.green-result-mm:after {
+				content: attr(data-resultaat);
+				background: green;
+				right: -6px;
+				position: absolute;
+				color: white;
+				font-weight: bold;
+				padding: 7px 31px 7px 7px;
+				font-size: 20px;
+				line-height: 20px;
+			}
+
+			.red-mm, .skip-mm, .quit-mm {
+				width: 100%;
+				background: rgba(255, 0, 0, 0.74);
+				color: white;
+				font-size: 30px;
+				z-index: 11;
+				height: 68px;
+				line-height: 68px;
+				font-weight: bold;
+			}
+
+			.skip-mm, .quit-mm {
+				background: rgba(0, 0, 0, 0.76);
+			}
+		</style>
+	</head>
+	<body>
+		<!-- Settings -->
+		<div id="atletieknu-settings" data-max-athletes-per-page="10" data-time-per-page="5000" data-isfieldscoreboard="1" data-time-per-initialpage="15000000000000" data-force-display-result-duration="10000" data-time-display-current-ranking="5000" data-force-display-nextheight-duration="30000"></div>
+
+		<div class="athleteInfoContainer">
+			<!-- Pre-event screen -->
+			<div class="athleteInfo" rv-animateshow="showPreEvent" rv-animatehide="showPreEvent">
+				{startlist.startlijst_onderdeel_begintijd | humanTime}
+
+				<span class="athlete">{startlist.startlijst_naam}</span>
+			</div>
+
+			<!-- Result screen -->
+			<div class="athleteInfo" rv-directshow="showIndivResult" rv-animatehide="showIndivResult">
+				<span class="attempt">POG {indivResult.score_poging_nummer}</span>
+				<div class="athlete">
+					{indivResult.deelnemer_rugnummer}. {indivResult.persoonsgegeven_achternaam | upper}
+				</div>
+				<span class="wind" rv-show="indivResult.score_wind">{indivResult.score_wind}</span>
+			</div>
+
+
+			<!-- Next athlete screen -->
+			<div class="athleteInfo" rv-animateshow="showIndivNextAthlete" rv-directhide="showIndivNextAthlete">
+				<span class="attempt">POG {indivNextAthlete.score_poging_nummer}</span>
+				<span class="athlete">{indivNextAthlete.deelnemer_rugnummer}. { indivNextAthlete.persoonsgegeven_achternaam | upper }</span>
+			</div>
+		</div>
+
+		<div class='preEventScroller' rv-directshow="showPreEvent" rv-directhide="showPreEvent">
+			<div class="news red">
+				<ul>
+					<li rv-each-rank="startlistRanks">
+						<span class="news-col-1">{ rank.deelnemer_rugnummer }. { rank.deelnemer_naam }</span> &nbsp; { rank.vereniging_naam }
+					</li>
+				</ul>
+			</div>
+		</div>
+
+		<div class='ruler' rv-style-left="centimeteroffset | add 'px'" rv-directshow="showIndivResult | or showIndivNextAthlete" rv-directhide="showPreEvent | isEqual false">
+			<div class='cm'>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+			</div>
+			<div class='cm'>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+			</div>
+			<div class='cm'>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+			</div>
+			<div class='cm'>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+			</div>
+			<div class='cm'>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+			</div>
+			<div class='cm'>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+			</div>
+			<div class='cm'>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+			</div>
+			<div class='cm'>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+			</div>
+			<div class='cm'>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+			</div>
+			<div class='cm'>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+			</div>
+			<div class='cm'>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+			</div>
+			<div class='cm'>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+			</div>
+			<div class='cm'>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+			</div>
+			<div class='cm'>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+			</div>
+			<div class='cm'>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+			</div>
+			<div class='cm'>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+			</div>
+			<div class='cm'>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+			</div>
+			<div class='cm'>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+			</div>
+			<div class='cm'>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+			</div>
+			<div class='cm'>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+			</div>
+			<div class='cm'></div>
+
+
+			<div class="medal bronze-mm" rv-style-left="startlistRanks.2.deelnemer_bestscore | toFloat | multiply 100 | add 'px'"></div>
+			<div class="medal silver-mm" rv-style-left="startlistRanks.1.deelnemer_bestscore | toFloat | multiply 100 | add 'px'"></div>
+			<div class="medal gold-mm" rv-style-left="startlistRanks.0.deelnemer_bestscore | toFloat | multiply 100 | add 'px'"></div>
+
+			<!-- Next athlete screen -->
+			<div class="medal blue-mm typecursor" rv-data-position="indivNextAthlete.deelnemer_rank | add 'e'" rv-style-left="indivNextAthlete.deelnemer_bestscore | toFloat | multiply 100 | add 'px'" rv-animateshow="showIndivNextAthlete" rv-directhide="showIndivNextAthlete"></div>
+
+			<!-- Result screen -->
+			<div class="medal green-result-mm" rv-data-resultaat="indivResult.score_resultaat" rv-style-min-width="centimeteroffset | multiply -1 | add 100 | add 'px'" rv-style-width="indivResult.score_resultaat | toFloat | multiply 100 | add 6 | add 'px'" rv-directshow="showIndivResult" rv-animatehide="showIndivResult"></div>
+			<div class="medal blue-mm" rv-data-position="indivResult.deelnemer_rank | add 'e'" rv-style-left="indivResult.deelnemer_bestscore | toFloat | multiply 100 | add 'px'" rv-directshow="showIndivResult" rv-animatehide="showIndivResult"></div>
+
+			<div class="medal red-mm" rv-directshow="indivResult.score_resultaat | isEqual 'X'" rv-animatehide="showIndivResult" rv-style-padding-left="centimeteroffset | multiply -1 | add 'px'">Ongeldig</div>
+			<div class="medal skip-mm" rv-directshow="indivResult.score_resultaat | isEqual '-'" rv-animatehide="showIndivResult" rv-style-padding-left="centimeteroffset | multiply -1 | add 'px'">Slaat poging over</div>
+			<div class="medal quit-mm" rv-directshow="indivResult.score_resultaat | isEqual 'Stopt'" rv-animatehide="showIndivResult" rv-style-padding-left="centimeteroffset | multiply -1 | add 'px'">Stopt</div>
+		</div>
+
+
+		
+		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+		<script src="bootstrap-3.3.7/js/jquery-3.1.1.min.js"></script>
+		<!-- Include all compiled plugins (below), or include individual files as needed -->
+		<script src="bootstrap-3.3.7/js/bootstrap.min.js"></script>
+		<script src="fieldscoreboard-longjump-768-96/js/moment.js"></script>
+		<script src="fieldscoreboard-longjump-768-96/js/sightglass.js"></script>
+		<script src="fieldscoreboard-longjump-768-96/js/rivets.js"></script>
+		<script src="fieldscoreboard-longjump-768-96/js/rivetsstdlib.js"></script>
+
+		<script src="fieldscoreboard-longjump-768-96/js/script.js"></script>
+	</body>
+</html>

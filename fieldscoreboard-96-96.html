@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en" style="display: none;">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+		<title></title>
+
+		<!-- Bootstrap -->
+		<link href="bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet">
+		<link href="fieldscoreboard/khand/khand.css" rel="stylesheet">
+		<link href="fieldscoreboard/css/scroller.css" rel="stylesheet">
+		<link href="fieldscoreboard/css/newsscroller.css" rel="stylesheet">
+		<link href="fieldscoreboard/css/animate.css" rel="stylesheet">
+		<style>
+			html, body {
+				width: 288px;
+				height: 96px;
+				margin: 0;
+				padding: 0;
+				background-color: green;
+			}
+
+			div.screen1 {
+				width: 96px;
+				height: 96px;
+				overflow: hidden;
+				float: left;
+			}
+
+			div.sideToSideMarqueeContainer {
+				white-space: nowrap;
+				overflow: hidden;
+				position: relative;
+			}
+
+			div.sideToSideMarqueeContent {
+				position: relative;
+			}
+
+			/* background image */
+			body {
+				background: #505050;
+				font-family: 'Khand', sans-serif;
+				font-weight: bold;
+				color: white;
+			}
+
+			.row1 {
+				text-align: center;
+				font-size: 34px;
+				margin-top: -7px;	/* no margin at top of page, we already have so few pixels.. */
+			}
+
+			.row2 {
+				text-align: center;
+				font-size: 34px;
+				width: 100%;
+			}
+
+			.row3 {
+				text-align: center;
+				font-size: 34px;
+				width: 100%;
+				height: 35px;
+			}
+
+			.row4 {
+				text-align: center;
+				font-size: 20px;
+				width: 100%;
+			}
+
+			.attempt {
+				float: left;
+				text-align: left;
+			}
+
+			.highjump_attempt_height {
+				float: right;
+				text-align: right;
+			}
+
+			.highjump_attempt_result {
+				font-size: 40px;
+				margin-top: -3px;
+				display: inline-block;
+				margin-bottom: -10px;
+			}
+
+			.marquee {
+				clear: both;
+			}
+
+			.nextAthlete {
+				font-size: 20px;
+				text-align: center;
+				margin-top: 4px;
+			}
+
+			.poging, .wind, .fakewind, .attempt, .highjump_attempt_height, .curpos {
+				font-size: 24px;
+				position: relative;
+				top: -2px;
+				display: inline-block;
+			}
+
+			.attempt, .highjump_attempt_height {
+				top: 5px;
+			}
+
+			.highjump_attempt_height {
+				padding-left: 7px;
+				margin-top: 2px;
+			}
+
+			.fakewind {
+				opacity: 0;
+			}
+
+			.typecursor {
+				width: 10px;
+				height: 20px;
+				top: 1px;
+				position: relative;
+				display: inline-block;
+				animation: blink-caret 1.2s infinite;
+			}
+			.highjump_attempt_result .typecursor {
+				height: 28px;
+			}
+
+			/* The typing effect */
+			@keyframes blink-caret {
+				0% { background: transparent; }
+				50% { background: white; }
+				100% { background: transparent; }
+			}
+
+			/* Styling v2 */
+			.row1 {
+				width: 100%;
+				color: white;
+				z-index: 30000;
+				position: relative;
+			}
+			.row2, .row3, .row4 {
+				color: white;
+				z-index: 30000;
+				position: relative;
+				margin-top: -17px;
+			}
+
+			.preEvent .row1 {
+				margin-top: -9px;
+			}
+
+			.preEvent .row2, .preEvent .row3, .preEvent .row4 {
+				margin-top: -14px;
+			}
+
+			.nextHeight .row1,
+			.nextHeight .row2,
+			.nextHeight .news {
+				font-size: 28px;
+				line-height: 49px;
+			}
+
+			.news {
+				color: white;
+				margin-top: -7px;
+				height: 29px;
+				z-index: 30000;
+				position: relative;
+			}
+			.wind, .highjump_attempt_height, .curpos {
+				border-left: 1px #505050 solid;
+			}
+			.wind, .curpos {
+				padding-left: 0;
+			}
+			.poging, .attempt {
+				padding-right: 4px;
+			}
+
+			.score_resultaat {
+				display: inline-block;
+			}
+
+			.backgroundrow1 {
+				float: left;
+				height: 31px;
+				width: 100%;
+				background: #E35300;
+				position: fixed;
+			}
+
+			.backgroundrow2 {
+				float: left;
+				height: 32px;
+				width: 100%;
+				background: #61605C;
+				position: fixed;
+				top: 32px;
+			}
+
+			.backgroundrow3 {
+				float: left;
+				height: 31px;
+				width: 100%;
+				background: #E35300;
+				position: fixed;
+				top: 65px;
+			}
+		</style>
+	</head>
+	<body>
+		<!-- Settings -->
+		<div id="atletieknu-settings" data-max-athletes-per-page="10" data-time-per-page="5000" data-isfieldscoreboard="1" data-time-per-initialpage="15000000000000" data-force-display-result-duration="10000" data-time-display-current-ranking="5000" data-force-display-nextheight-duration="30000"></div>
+
+		<div class="backgroundrow1"></div>
+		<div class="backgroundrow2"></div>
+		<div class="backgroundrow3"></div>
+
+		<!-- Screen 1 -->
+		<div class="screen1">
+			<!-- Next-height screen -->
+			<div class="nextHeight" rv-animateshow="showNextHeight" rv-animatehide="showNextHeight">
+				<div class="row1">
+					Volgende
+				</div>
+
+				<div class="row2">
+					hoogte:
+				</div>
+
+				<div class="row2">
+					{nextHeight}
+				</div>
+			</div>
+
+
+			<!-- Pre-event screen -->
+			<div class="preEvent" rv-animateshow="showPreEvent" rv-animatehide="showPreEvent">
+				<div class="row1">
+					<div class="sideToSideMarqueeContainer">
+						<div class="sideToSideMarqueeContent">
+							{startlist.startlijst_naam}
+						</div>
+					</div>
+				</div>
+
+				<div class="row2">
+					{startlist.startlijst_onderdeel_begintijd | humanTime}
+				</div>
+
+				<div class="news red">
+					<ul>
+						<li rv-each-rank="startlistRanks">
+							{ rank.persoonsgegeven_achternaam | upper } &nbsp; { rank.vereniging_afkorting }
+						</li>
+					</ul>
+				</div>
+			</div>
+
+
+			<!-- Result screen -->
+			<div class="indivResult" rv-directshow="showIndivResult" rv-animatehide="showIndivResult">
+				<div class="row1">
+					<div class="sideToSideMarqueeContainer">
+						<div class="sideToSideMarqueeContent">
+							{indivResult.deelnemer_rugnummer}. {indivResult.persoonsgegeven_achternaam | upper}
+						</div>
+					</div>
+				</div>
+
+				<div class="row2 result" rv-hide="indivResult.highjump_attempt_height">
+					<span class="score_resultaat">{indivResult.score_resultaat}</span>
+
+					<span class="wind" rv-show="indivResult.score_wind">{indivResult.score_wind}</span>
+				</div>
+
+				<div class="row2" rv-show="indivResult.highjump_attempt_height">
+					<span class="highjump_attempt_result result" rv-html="indivResult.highjump_attempt_result | highjumpresult"></span>
+				</div>
+
+
+				<div class="row3 result" rv-hide="indivResult.highjump_attempt_height">
+					<span class="poging">Pog {indivResult.score_poging_nummer}</span>
+					<span class="curpos">
+						<span rv-show="indivResult.deelnemer_rank"> &nbsp; {indivResult.deelnemer_rank}<sup>e</sup> &nbsp; </span>
+					</span>
+				</div>
+
+				<div class="row3" rv-show="indivResult.highjump_attempt_height">
+					<span class="attempt">Pog {indivResult.attemptTxt}</span>
+					<span class="highjump_attempt_height">{indivResult.highjump_attempt_height}</span>
+				</div>
+			</div>
+
+
+			<!-- Next athlete screen -->
+			<div class="indivNextAthlete" rv-animateshow="showIndivNextAthlete" rv-directhide="showIndivNextAthlete">
+				<div class="row1">
+					<div class="sideToSideMarqueeContainer">
+						<div class="sideToSideMarqueeContent">
+							{indivNextAthlete.deelnemer_rugnummer}. { indivNextAthlete.persoonsgegeven_achternaam | upper }
+						</div>
+					</div>
+				</div>
+
+				<div class="row2" rv-show="indivNextAthlete.score_poging_nummer">
+					&nbsp; &nbsp; &nbsp;
+					<span class="typecursor"></span>
+					&nbsp; &nbsp; &nbsp;
+
+				</div>
+
+				<div class="row2" rv-show="indivNextAthlete.highjump_attempt_height">
+					<span class="highjump_attempt_result" rv-html="indivNextAthlete.highjump_attempt_result | highjumpresult"></span>
+					<span class="typecursor"></span>
+				</div>
+
+
+
+				<div class="row3" rv-show="indivNextAthlete.score_poging_nummer">
+					<span class="poging">Pog {indivNextAthlete.score_poging_nummer}</span>
+					<span class="curpos">
+						<span rv-show="indivNextAthlete.deelnemer_rank"> &nbsp; {indivNextAthlete.deelnemer_rank}<sup>e</sup> &nbsp; </span>
+					</span>
+				</div>
+
+				<div class="row3" rv-show="indivNextAthlete.highjump_attempt_height">
+					<span class="attempt">Pog {indivNextAthlete.attemptTxt}</span>
+					<span class="highjump_attempt_height" rv-text="indivNextAthlete.highjump_attempt_height"></span>
+				</div>
+
+			</div>
+		</div>
+
+
+
+
+
+
+
+
+
+		<!-- Screen 2 -->
+
+		<div class="screen1">
+			<!-- Next-height screen -->
+			<div class="nextHeight" rv-animateshow="showNextHeight" rv-animatehide="showNextHeight">
+				<div class="row1">
+					Volgende
+				</div>
+
+				<div class="row2">
+					hoogte:
+				</div>
+
+				<div class="row2">
+					{nextHeight}
+				</div>
+			</div>
+
+
+			<!-- Pre-event screen -->
+			<div class="preEvent" rv-animateshow="showPreEvent" rv-animatehide="showPreEvent">
+				<div class="row1">
+					<div class="sideToSideMarqueeContainer">
+						<div class="sideToSideMarqueeContent">
+							{startlist.startlijst_naam}
+						</div>
+					</div>
+				</div>
+
+				<div class="row2">
+					{startlist.startlijst_onderdeel_begintijd | humanTime}
+				</div>
+
+				<div class="news red">
+					<ul>
+						<li rv-each-rank="startlistRanks">
+							{ rank.persoonsgegeven_achternaam | upper } &nbsp; { rank.vereniging_afkorting }
+						</li>
+					</ul>
+				</div>
+			</div>
+
+
+			<!-- Result screen -->
+			<div class="indivResult" rv-directshow="showIndivResult" rv-animatehide="showIndivResult">
+				<div class="row1">
+					<div class="sideToSideMarqueeContainer">
+						<div class="sideToSideMarqueeContent">
+							{indivResult.deelnemer_rugnummer}. {indivResult.persoonsgegeven_achternaam | upper}
+						</div>
+					</div>
+				</div>
+
+				<div class="row2 result" rv-hide="indivResult.highjump_attempt_height">
+					<span class="score_resultaat">{indivResult.score_resultaat}</span>
+
+					<span class="wind" rv-show="indivResult.score_wind">{indivResult.score_wind}</span>
+				</div>
+
+				<div class="row2" rv-show="indivResult.highjump_attempt_height">
+					<span class="highjump_attempt_result result" rv-html="indivResult.highjump_attempt_result | highjumpresult"></span>
+				</div>
+
+
+				<div class="row3 result" rv-hide="indivResult.highjump_attempt_height">
+					<span class="poging">Pog {indivResult.score_poging_nummer}</span>
+					<span class="curpos">
+						<span rv-show="indivResult.deelnemer_rank"> &nbsp; {indivResult.deelnemer_rank}<sup>e</sup> &nbsp; </span>
+					</span>
+				</div>
+
+				<div class="row3" rv-show="indivResult.highjump_attempt_height">
+					<span class="attempt">Pog {indivResult.attemptTxt}</span>
+					<span class="highjump_attempt_height">{indivResult.highjump_attempt_height}</span>
+				</div>
+			</div>
+
+
+			<!-- Next athlete screen -->
+			<div class="indivNextAthlete" rv-animateshow="showIndivNextAthlete" rv-directhide="showIndivNextAthlete">
+				<div class="row1">
+					<div class="sideToSideMarqueeContainer">
+						<div class="sideToSideMarqueeContent">
+							{indivNextAthlete.deelnemer_rugnummer}. { indivNextAthlete.persoonsgegeven_achternaam | upper }
+						</div>
+					</div>
+				</div>
+
+				<div class="row2" rv-show="indivNextAthlete.score_poging_nummer">
+					&nbsp; &nbsp; &nbsp;
+					<span class="typecursor"></span>
+					&nbsp; &nbsp; &nbsp;
+
+				</div>
+
+				<div class="row2" rv-show="indivNextAthlete.highjump_attempt_height">
+					<span class="highjump_attempt_result" rv-html="indivNextAthlete.highjump_attempt_result | highjumpresult"></span>
+					<span class="typecursor"></span>
+				</div>
+
+
+
+				<div class="row3" rv-show="indivNextAthlete.score_poging_nummer">
+					<span class="poging">Pog {indivNextAthlete.score_poging_nummer}</span>
+					<span class="curpos">
+						<span rv-show="indivNextAthlete.deelnemer_rank"> &nbsp; {indivNextAthlete.deelnemer_rank}<sup>e</sup> &nbsp; </span>
+					</span>
+				</div>
+
+				<div class="row3" rv-show="indivNextAthlete.highjump_attempt_height">
+					<span class="attempt">Pog {indivNextAthlete.attemptTxt}</span>
+					<span class="highjump_attempt_height" rv-text="indivNextAthlete.highjump_attempt_height"></span>
+				</div>
+
+			</div>
+		</div>
+
+
+
+		<!-- Screen 3 -->
+
+
+		<div class="screen1">
+			<!-- Next-height screen -->
+			<div class="nextHeight" rv-animateshow="showNextHeight" rv-animatehide="showNextHeight">
+				<div class="row1">
+					Volgende
+				</div>
+
+				<div class="row2">
+					hoogte:
+				</div>
+
+				<div class="row2">
+					{nextHeight}
+				</div>
+			</div>
+
+
+			<!-- Pre-event screen -->
+			<div class="preEvent" rv-animateshow="showPreEvent" rv-animatehide="showPreEvent">
+				<div class="row1">
+					<div class="sideToSideMarqueeContainer">
+						<div class="sideToSideMarqueeContent">
+							{startlist.startlijst_naam}
+						</div>
+					</div>
+				</div>
+
+				<div class="row2">
+					{startlist.startlijst_onderdeel_begintijd | humanTime}
+				</div>
+
+				<div class="news red">
+					<ul>
+						<li rv-each-rank="startlistRanks">
+							{ rank.persoonsgegeven_achternaam | upper } &nbsp; { rank.vereniging_afkorting }
+						</li>
+					</ul>
+				</div>
+			</div>
+
+
+			<!-- Result screen -->
+			<div class="indivResult" rv-directshow="showIndivResult" rv-animatehide="showIndivResult">
+				<div class="row1">
+					<div class="sideToSideMarqueeContainer">
+						<div class="sideToSideMarqueeContent">
+							{indivResult.deelnemer_rugnummer}. {indivResult.persoonsgegeven_achternaam | upper}
+						</div>
+					</div>
+				</div>
+
+				<div class="row2 result" rv-hide="indivResult.highjump_attempt_height">
+					<span class="score_resultaat">{indivResult.score_resultaat}</span>
+
+					<span class="wind" rv-show="indivResult.score_wind">{indivResult.score_wind}</span>
+				</div>
+
+				<div class="row2" rv-show="indivResult.highjump_attempt_height">
+					<span class="highjump_attempt_result result" rv-html="indivResult.highjump_attempt_result | highjumpresult"></span>
+				</div>
+
+
+				<div class="row3 result" rv-hide="indivResult.highjump_attempt_height">
+					<span class="poging">Pog {indivResult.score_poging_nummer}</span>
+					<span class="curpos">
+						<span rv-show="indivResult.deelnemer_rank"> &nbsp; {indivResult.deelnemer_rank}<sup>e</sup> &nbsp; </span>
+					</span>
+				</div>
+
+				<div class="row3" rv-show="indivResult.highjump_attempt_height">
+					<span class="attempt">Pog {indivResult.attemptTxt}</span>
+					<span class="highjump_attempt_height">{indivResult.highjump_attempt_height}</span>
+				</div>
+			</div>
+
+
+			<!-- Next athlete screen -->
+			<div class="indivNextAthlete" rv-animateshow="showIndivNextAthlete" rv-directhide="showIndivNextAthlete">
+				<div class="row1">
+					<div class="sideToSideMarqueeContainer">
+						<div class="sideToSideMarqueeContent">
+							{indivNextAthlete.deelnemer_rugnummer}. { indivNextAthlete.persoonsgegeven_achternaam | upper }
+						</div>
+					</div>
+				</div>
+
+				<div class="row2" rv-show="indivNextAthlete.score_poging_nummer">
+					&nbsp; &nbsp; &nbsp;
+					<span class="typecursor"></span>
+					&nbsp; &nbsp; &nbsp;
+
+				</div>
+
+				<div class="row2" rv-show="indivNextAthlete.highjump_attempt_height">
+					<span class="highjump_attempt_result" rv-html="indivNextAthlete.highjump_attempt_result | highjumpresult"></span>
+					<span class="typecursor"></span>
+				</div>
+
+
+
+				<div class="row3" rv-show="indivNextAthlete.score_poging_nummer">
+					<span class="poging">Pog {indivNextAthlete.score_poging_nummer}</span>
+					<span class="curpos">
+						<span rv-show="indivNextAthlete.deelnemer_rank"> &nbsp; {indivNextAthlete.deelnemer_rank}<sup>e</sup> &nbsp; </span>
+					</span>
+				</div>
+
+				<div class="row3" rv-show="indivNextAthlete.highjump_attempt_height">
+					<span class="attempt">Pog {indivNextAthlete.attemptTxt}</span>
+					<span class="highjump_attempt_height" rv-text="indivNextAthlete.highjump_attempt_height"></span>
+				</div>
+
+			</div>
+		</div>
+
+
+		
+		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+		<script src="bootstrap-3.3.7/js/jquery-3.1.1.min.js"></script>
+		<!-- Include all compiled plugins (below), or include individual files as needed -->
+		<script src="bootstrap-3.3.7/js/bootstrap.min.js"></script>
+		<script src="fieldscoreboard/js/moment.js"></script>
+		<script src="fieldscoreboard/js/sightglass.js"></script>
+		<script src="fieldscoreboard/js/rivets.js"></script>
+		<script src="fieldscoreboard/js/rivetsstdlib.js"></script>
+
+		<script src="fieldscoreboard/js/script.js"></script>
+	</body>
+</html>
