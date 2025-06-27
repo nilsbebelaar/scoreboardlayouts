@@ -14,25 +14,42 @@
 		<link href="fieldscoreboard-longjump-768-96/css/newsscroller.css" rel="stylesheet">
 		<link href="fieldscoreboard-longjump-768-96/css/animate.css" rel="stylesheet">
 		<style>
-			html, body {
-				width: 1000px;
-				height: 96px;
+			:root{
+				--pixels_per_meter: 256;
+				--screen_lenth: 4;
+				--screen_height: 128;
+				--cm_to_start: 450;
+				--extra_scaling: 2; /* Need to scale to render enough pixels */
+				--horizontal_ruler_scaling: calc(var(--pixels_per_meter) / (var(--extra_scaling) * 100));
+			}
+			html, body, #screen1, .container {
 				margin: 0;
 				padding: 0;
 				background-color: green;
 			}
+			#screen1 {
+				width: calc(var(--screen_lenth) * var(--pixels_per_meter) * 1px);
+				height: calc(var(--screen_height) * 1px);
+				overflow: hidden;
+			}
+			.container {
+				width: 1000px;
+				transform-origin: top left;
+				transform: scale(var(--extra_scaling));
+			}
 
 			/* Athlete markup */
-			.athleteInfoContainer {
-				height: 28px;
+			.athleteInfoContainer, .athleteInfo {
+				height: calc(1px * (var(--screen_height) / var(--extra_scaling)) / 3);
 				background: #E35300;
-				font-size: 30px;
+			}
+			.athleteInfoContainer {
+				font-size: 36px;
 				color: white;
 				border-bottom: 2px solid #424242;
+				text-wrap: nowrap;
 			}
 			.athleteInfo {
-				height: 33px;
-				background: #E35300;
 				top: -7px;
 				position: relative;
 			}
@@ -46,41 +63,43 @@
 
 			/* Pre-event markup */
 			.preEventScroller {
-				height: 68px;
+				height: calc(2px * (var(--screen_height) / var(--extra_scaling)) / 3);
 				background: #E35300;
 				color: white;
-				font-size: 30px;
+				font-size: 40px;
 			}
 
 			/* Ruler markup */
 			.ruler {
+				height: calc(2px * (var(--screen_height) / var(--extra_scaling)) / 3);
 				position: relative;
 				width: 100%;
 				margin: 0;
-				height: 68px;
 				background: black;
 			}
 			.ruler .cm,
 			.ruler .mm {
 				position: absolute;
-				border-left: 3px solid white;
-				height: 48px;
+				border-left: 2px solid white;
+				height: 60%;
 				width: 10%;
 				bottom: 0;
-				z-index: 9;
+				z-index: 1;
 			}
 			.ruler .mm {
 				width: 20%;
 			}
 			.ruler .cm:after {
 				position: absolute;
-				bottom: 20px;
-				font: 30px/1 sans-serif;
+				transform: scaleX(calc(1 / var(--horizontal_ruler_scaling)));
+				bottom: 5px;
+				font: 24px/1 "Lato";
+				font-weight: bold;
 				color: white;
-				margin-left: 5px;
+				margin-left: 1px;
 			}
 			.ruler .mm {
-				height: 20px;
+				height: 60%;
 				bottom: 0;
 			}
 			.ruler .cm:nth-of-type(1) {
@@ -164,16 +183,16 @@
 
 			.medal {
 				position: absolute;
-				border-left: 6px solid white;
-				height: 48px;
-				width: 3px;
+				border-left: 2px solid white;
+				height: 100%;
+				width: 1px;
 				transition: 1s;
 				bottom: 0;
 			}
 
 			.bronze-mm {
 				border-color: #cd7f32;
-				height: 66px;
+				height: 80%;
 				z-index: 5;
 			}
 			.bronze-mm:before {
@@ -189,7 +208,7 @@
 
 			.silver-mm {
 				border-color: silver;
-				height: 66px;
+				height: 90%;
 				z-index: 6;
 			}
 			.silver-mm:before {
@@ -205,7 +224,7 @@
 
 			.gold-mm {
 				border-color: gold;
-				height: 66px;
+				height: 100%;
 				z-index: 7;
 			}
 			.gold-mm:before {
@@ -218,11 +237,10 @@
 				top: -2px;
 				padding: 0 3px;
 			}
-			
 
 			.blue-mm {
 				border-color: blue;
-				height: 66px;
+				height: 100%;
 				z-index: 11;
 			}
 			.blue-mm:before {
@@ -281,6 +299,8 @@
 		</style>
 	</head>
 	<body>
+		<div id="screen1">
+		<div class="container">
 		<!-- Settings -->
 		<div id="atletieknu-settings" data-max-athletes-per-page="10" data-time-per-page="5000" data-isfieldscoreboard="1" data-time-per-initialpage="15000000000000" data-force-display-result-duration="10000" data-time-display-current-ranking="5000" data-force-display-nextheight-duration="30000"></div>
 
@@ -319,7 +339,7 @@
 			</div>
 		</div>
 
-		<div class='ruler' rv-style-left="centimeteroffset | add 'px'" rv-directshow="showIndivResult | or showIndivNextAthlete" rv-directhide="showPreEvent | isEqual false">
+		<div class='ruler' style="transform-origin: left; transform: scaleX(var(--horizontal_ruler_scaling)) translateX(calc(var(--cm_to_start) * -1px));" rv-directshow="showIndivResult | or showIndivNextAthlete" rv-directhide="showPreEvent | isEqual false">
 			<div class='cm'>
 				<div class='mm'></div>
 				<div class='mm'></div>
@@ -458,7 +478,8 @@
 			<div class="medal skip-mm" rv-directshow="indivResult.score_resultaat | isEqual '-'" rv-animatehide="showIndivResult" rv-style-padding-left="centimeteroffset | multiply -1 | add 'px'">Slaat poging over</div>
 			<div class="medal quit-mm" rv-directshow="indivResult.score_resultaat | isEqual 'Stopt'" rv-animatehide="showIndivResult" rv-style-padding-left="centimeteroffset | multiply -1 | add 'px'">Stopt</div>
 		</div>
-
+		</div>
+		</div>
 
 		
 		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
