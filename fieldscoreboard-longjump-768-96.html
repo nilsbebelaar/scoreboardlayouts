@@ -16,10 +16,10 @@
 		<style>
 			:root{
 				--pixels_per_meter: 256;
-				--screen_lenth_meter: 4;
+				--screen_length_meter: 4;
 				--screen_height: 128;
 				--cm_to_start: 450;
-				--extra_scaling: 2; /* Need to scale to render enough pixels */
+				--extra_scaling: 2; /* Need to scale to render enough pixels (ruler is based on 1000px) */
 				--horizontal_ruler_scaling: calc(var(--pixels_per_meter) / (var(--extra_scaling) * 100));
 				--primary-color: #EE2367;
 			}
@@ -29,18 +29,23 @@
 				padding: 0;
 				background-color: green;
 			}
-			#screen1 {
+			#screen1, #screen2 {
+				width: calc(var(--screen_length_meter) * var(--pixels_per_meter) * 1px);
+				height: calc(var(--screen_height) * 1px);
+				overflow: hidden;
+				position: absolute;
 				transform-origin: top left;
+			}
+			#screen1 {
+				/* Rotated view: */
 				/* transform: rotate(90deg) translateY(calc(var(--screen_height) * -1px)); */
 			}
 			#screen2 {
-				transform-origin: top left;
-				/* transform: rotate(90deg) translateY(calc(var(--screen_height) * -1px)); */
-			}
-			#screen1, #screen2 {
-				width: calc(var(--screen_lenth_meter) * var(--pixels_per_meter) * 1px);
-				height: calc(var(--screen_height) * 1px);
-				overflow: hidden;
+				/* Normal view: */
+				transform: translateY(calc(var(--screen_height) * 1px));
+
+				/* Rotated view: */
+    		/* transform: rotate(90deg) translateY(calc(var(--screen_height) * -2px)); */
 			}
 			.container {
 				width: 1000px;
@@ -50,7 +55,7 @@
 			/* Athlete markup */
 			.athleteInfoContainer, .athleteInfo {
 				height: calc(1px * (var(--screen_height) / var(--extra_scaling)) / 3);
-				max-width: calc(var(--screen_lenth_meter) * var(--pixels_per_meter) * 1px / var(--extra_scaling));
+				max-width: calc(var(--screen_length_meter) * var(--pixels_per_meter) * 1px / var(--extra_scaling));
 				background: var(--primary-color);
 			}
 			.athleteInfoContainer {
@@ -99,12 +104,17 @@
 			.ruler {
 				transform-origin: left;
 				height: calc(2px * (var(--screen_height) / var(--extra_scaling)) / 3);
-				transform: scaleX(var(--horizontal_ruler_scaling)) translateX(calc(var(--cm_to_start) * -1px));
+				transform: scaleX(var(--horizontal_ruler_scaling)) translateX(calc(var(--cm_to_start) * -1px - 1px));
 				position: relative;
 				width: 100%;
 				margin: 0;
 				background: black;
 			}
+			
+			.mirror .ruler{
+				transform: scaleX(calc(var(--horizontal_ruler_scaling) * -1)) translateX(calc(((var(--screen_length_meter) * 100) + var(--cm_to_start)) * -1px - 1px))
+			}
+
 			.ruler .cm,
 			.ruler .mm {
 				position: absolute;
@@ -126,6 +136,10 @@
 				font-size: 1.5em;
 				font-weight: bold;
 				color: white;
+			}
+			.mirror .ruler .cm:after {
+				transform-origin: left;
+				transform: scaleX(calc(-1 / var(--horizontal_ruler_scaling))) translateX(5px);
 			}
 			.ruler .cm:nth-of-type(1) {
 				left: 0%;
@@ -224,6 +238,12 @@
 				padding: 1px 3px 0px;
 				font-weight: bold;
 			}
+			.mirror .medal:before {
+				transform: scaleX(calc(-1 / var(--horizontal_ruler_scaling)));
+				transform-origin: left;
+				right: unset;
+				left: 1px;
+			}
 
 			.bronze-mm {
 				border-color: #cd7f32;
@@ -284,10 +304,6 @@
 				height: 100%;
 				z-index: 10;
 				background: rgba(0, 128, 0, 0.5);
-				/* width: 0;
-				border-color: green;
-				border-right: 2px solid green;
-				z-index: 10; */
 			}
 			.green-result-mm:after {
 				content: attr(data-resultaat);
@@ -304,6 +320,13 @@
 				line-height: 21px;
 				background: green;
 			}
+			.mirror .green-result-mm:after {
+				transform: scaleX(calc(-1 / var(--horizontal_ruler_scaling)));
+				right: unset;
+				left: 100%;
+				transform-origin: left;
+				padding: 2px 3px 2px 24px;
+			}
 
 			.red-mm, .skip-mm, .quit-mm {
 				width: 100%;
@@ -316,7 +339,7 @@
 				line-height: 130%;
 				font-weight: bold;
 				text-align: center;
-				max-width: calc(var(--screen_lenth_meter) * var(--pixels_per_meter) * 1px / var(--extra_scaling));
+				max-width: calc(var(--screen_length_meter) * var(--pixels_per_meter) * 1px / var(--extra_scaling));
 			}
 
 			.skip-mm, .quit-mm {
@@ -325,10 +348,10 @@
 		</style>
 	</head>
 	<body>
+		<div id="atletieknu-settings" data-max-athletes-per-page="10" data-time-per-page="5000" data-isfieldscoreboard="1" data-time-per-initialpage="15000000000000" data-force-display-result-duration="10000" data-time-display-current-ranking="5000" data-force-display-nextheight-duration="30000"></div>
 		<div id="screen1">
 		<div class="container">
 		<!-- Settings -->
-		<div id="atletieknu-settings" data-max-athletes-per-page="10" data-time-per-page="5000" data-isfieldscoreboard="1" data-time-per-initialpage="15000000000000" data-force-display-result-duration="10000" data-time-display-current-ranking="5000" data-force-display-nextheight-duration="30000"></div>
 
 		<div class="athleteInfoContainer">
 			<!-- Pre-event screen -->
@@ -489,16 +512,199 @@
 			<div class='cm'></div>
 
 
-			<div class="medal bronze-mm" rv-style-left="startlistRanks.2.deelnemer_bestscore | toFloat | multiply 100 | add 'px'"></div>
-			<div class="medal silver-mm" rv-style-left="startlistRanks.1.deelnemer_bestscore | toFloat | multiply 100 | add 'px'"></div>
-			<div class="medal gold-mm" rv-style-left="startlistRanks.0.deelnemer_bestscore | toFloat | multiply 100 | add 'px'"></div>
+			<div class="medal bronze-mm" rv-style-left="startlistRanks.2.deelnemer_bestscore | toFloat | multiply 100 | clampMax | add 'px'"></div>
+			<div class="medal silver-mm" rv-style-left="startlistRanks.1.deelnemer_bestscore | toFloat | multiply 100 | clampMax | add 'px'"></div>
+			<div class="medal gold-mm" rv-style-left="startlistRanks.0.deelnemer_bestscore | toFloat | multiply 100 | clampMax | add 'px'"></div>
 
 			<!-- Next athlete screen -->
-			<div class="medal blue-mm typecursor" rv-data-position="indivNextAthlete.deelnemer_rank | add 'e'" rv-style-left="indivNextAthlete.deelnemer_bestscore | toFloat | multiply 100 | add 'px'" rv-animateshow="showIndivNextAthlete" rv-directhide="showIndivNextAthlete"></div>
+			<div class="medal blue-mm typecursor" rv-data-position="indivNextAthlete.deelnemer_rank | add 'e'" rv-style-left="indivNextAthlete.deelnemer_bestscore | toFloat | multiply 100 | clampMax | add 'px'" rv-animateshow="showIndivNextAthlete" rv-directhide="showIndivNextAthlete"></div>
 
 			<!-- Result screen -->
-			<div class="medal green-result-mm" rv-data-resultaat="indivResult.score_resultaat" rv-style-min-width="centimeteroffset | multiply -1 | add 100 | add 'px'" rv-style-width="indivResult.score_resultaat | toFloat | multiply 100 | add 'px'" rv-directshow="showIndivResult" rv-animatehide="showIndivResult"></div>
-			<div class="medal blue-mm" rv-data-position="indivResult.deelnemer_rank | add 'e'" rv-style-left="indivResult.deelnemer_bestscore | toFloat | multiply 100 | add 'px'" rv-directshow="showIndivResult" rv-animatehide="showIndivResult"></div>
+			<div class="medal green-result-mm" rv-data-resultaat="indivResult.score_resultaat" rv-style-min-width="centimeteroffset | multiply -1 | add 100 | add 'px'" rv-style-width="indivResult.score_resultaat | toFloat | multiply 100 | clampMax | add 'px'" rv-directshow="showIndivResult" rv-animatehide="showIndivResult"></div>
+			<div class="medal blue-mm" rv-data-position="indivResult.deelnemer_rank | add 'e'" rv-style-left="indivResult.deelnemer_bestscore | toFloat | multiply 100 | clampMax | add 'px'" rv-directshow="showIndivResult" rv-animatehide="showIndivResult"></div>
+			
+		</div>
+		<div class="medal red-mm" rv-directshow="indivResult.score_resultaat | isEqual 'X'" rv-animatehide="showIndivResult">Ongeldig</div>
+		<div class="medal skip-mm" rv-directshow="indivResult.score_resultaat | isEqual '-'" rv-animatehide="showIndivResult">Slaat poging over</div>
+		<div class="medal quit-mm" rv-directshow="indivResult.score_resultaat | isEqual 'Stopt (r)'" rv-animatehide="showIndivResult">Stopt</div>
+		</div>
+		</div>
+
+
+
+		<div id="screen2" class="mirror">
+		<div class="container">
+		<!-- Settings -->
+
+		<div class="athleteInfoContainer">
+			<!-- Pre-event screen -->
+			<div class="athleteInfo" rv-animateshow="showPreEvent" rv-animatehide="showPreEvent">
+				{startlist.startlijst_onderdeel_begintijd | humanTime}
+
+				<span class="athlete">{startlist.startlijst_naam}</span>
+			</div>
+
+			<!-- Result screen -->
+			<div class="athleteInfo" rv-directshow="showIndivResult" rv-animatehide="showIndivResult">
+				<span class="attempt"># {indivResult.score_poging_nummer}</span>
+				<div class="athlete">
+					{indivResult.deelnemer_rugnummer}. {indivNextAthlete.persoonsgegeven_achternaam | upper}
+				</div>
+				<span class="wind" rv-show="indivResult.score_wind">{indivResult.score_wind}</span>
+			</div>
+
+
+			<!-- Next athlete screen -->
+			<div class="athleteInfo" rv-animateshow="showIndivNextAthlete" rv-directhide="showIndivNextAthlete">
+				<span class="attempt"># {indivNextAthlete.score_poging_nummer}</span>
+				<span class="athlete">{indivNextAthlete.deelnemer_rugnummer}. {indivNextAthlete.persoonsgegeven_achternaam | upper}</span>
+			</div>
+		</div>
+
+		<div class='preEventScroller' rv-directshow="showPreEvent" rv-directhide="showPreEvent">
+			<div class="news red">
+				<ul>
+					<li rv-each-rank="startlistRanks">
+						<span class="news-col-1">{ rank.deelnemer_rugnummer }. { rank.deelnemer_naam }</span> &nbsp; { rank.vereniging_naam }
+					</li>
+				</ul>
+			</div>
+		</div>
+
+		<div class='ruler' rv-directshow="showIndivResult | or showIndivNextAthlete" rv-directhide="showPreEvent | isEqual false">
+			<div class='cm'>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+			</div>
+			<div class='cm'>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+			</div>
+			<div class='cm'>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+			</div>
+			<div class='cm'>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+			</div>
+			<div class='cm'>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+			</div>
+			<div class='cm'>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+			</div>
+			<div class='cm'>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+			</div>
+			<div class='cm'>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+			</div>
+			<div class='cm'>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+			</div>
+			<div class='cm'>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+			</div>
+			<div class='cm'>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+			</div>
+			<div class='cm'>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+			</div>
+			<div class='cm'>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+			</div>
+			<div class='cm'>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+			</div>
+			<div class='cm'>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+			</div>
+			<div class='cm'>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+			</div>
+			<div class='cm'>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+			</div>
+			<div class='cm'>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+			</div>
+			<div class='cm'>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+			</div>
+			<div class='cm'>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+				<div class='mm'></div>
+			</div>
+			<div class='cm'></div>
+
+
+			<div class="medal bronze-mm" rv-style-left="startlistRanks.2.deelnemer_bestscore | toFloat | multiply 100 | clampMax | add 'px'"></div>
+			<div class="medal silver-mm" rv-style-left="startlistRanks.1.deelnemer_bestscore | toFloat | multiply 100 | clampMax | add 'px'"></div>
+			<div class="medal gold-mm" rv-style-left="startlistRanks.0.deelnemer_bestscore | toFloat | multiply 100 | clampMax | add 'px'"></div>
+
+			<!-- Next athlete screen -->
+			<div class="medal blue-mm typecursor" rv-data-position="indivNextAthlete.deelnemer_rank | add 'e'" rv-style-left="indivNextAthlete.deelnemer_bestscore | toFloat | multiply 100 | clampMax | add 'px'" rv-animateshow="showIndivNextAthlete" rv-directhide="showIndivNextAthlete"></div>
+
+			<!-- Result screen -->
+			<div class="medal green-result-mm" rv-data-resultaat="indivResult.score_resultaat" rv-style-min-width="centimeteroffset | multiply -1 | add 100 | add 'px'" rv-style-width="indivResult.score_resultaat | toFloat | multiply 100 | clampMax | add 'px'" rv-directshow="showIndivResult" rv-animatehide="showIndivResult"></div>
+			<div class="medal blue-mm" rv-data-position="indivResult.deelnemer_rank | add 'e'" rv-style-left="indivResult.deelnemer_bestscore | toFloat | multiply 100 | clampMax | add 'px'" rv-directshow="showIndivResult" rv-animatehide="showIndivResult"></div>
 			
 		</div>
 		<div class="medal red-mm" rv-directshow="indivResult.score_resultaat | isEqual 'X'" rv-animatehide="showIndivResult">Ongeldig</div>
@@ -516,6 +722,11 @@
 		<script src="fieldscoreboard-longjump-768-96/js/sightglass.js"></script>
 		<script src="fieldscoreboard-longjump-768-96/js/rivets.js"></script>
 		<script src="fieldscoreboard-longjump-768-96/js/rivetsstdlib.js"></script>
+
+		<script>
+			function cssVal(v) {return parseFloat(getComputedStyle(document.documentElement).getPropertyValue(v));}
+			rivets.formatters.clampMax = v => Math.min(parseFloat(v), cssVal('--cm_to_start') + (cssVal('--screen_length_meter') * 100));
+		</script>
 
 		<script src="fieldscoreboard-longjump-768-96/js/script.js"></script>
 	</body>
