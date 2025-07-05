@@ -49,7 +49,7 @@
 			/* Rotated view: */
 			transform: rotate(90deg) translateY(calc(var(--screen_height) * -1px));
 		}
-		
+
 		#screen2 {
 			/* Normal view: */
 			/* transform: translateY(calc(var(--screen_height) * 1px)); */
@@ -431,9 +431,7 @@
 				<!-- Result screen -->
 				<div class="athleteInfo" rv-directshow="showIndivResult" rv-animatehide="showIndivResult">
 					<span class="attempt"># {indivResult.score_poging_nummer}</span>
-					<div class="athlete">
-						{indivResult.deelnemer_rugnummer}. {indivResult.deelnemer_naam | upper}
-					</div>
+					<div class="athlete">{indivResult.deelnemer_naam | upper}</div>
 					<span class="wind" rv-show="indivResult.score_wind">{indivResult.score_wind}</span>
 				</div>
 
@@ -441,7 +439,7 @@
 				<!-- Next athlete screen -->
 				<div class="athleteInfo" rv-animateshow="showIndivNextAthlete" rv-directhide="showIndivNextAthlete">
 					<span class="attempt"># {indivNextAthlete.score_poging_nummer}</span>
-					<span class="athlete">{indivNextAthlete.deelnemer_rugnummer}. {indivNextAthlete.deelnemer_naam | upper}</span>
+					<span class="athlete">{indivNextAthlete.deelnemer_naam | upper}</span>
 				</div>
 			</div>
 
@@ -585,7 +583,8 @@
 
 				<!-- Next athlete screen -->
 				<div class="medal blue-mm typecursor" rv-data-position="indivNextAthlete.deelnemer_rank | add 'e'"
-					rv-style-left="indivNextAthlete.deelnemer_bestscore | toFloat | multiply 100 | clampMax | add 'px'" rv-animateshow="showIndivNextAthlete" rv-directhide="showIndivNextAthlete"></div>
+					rv-style-left="indivNextAthlete.deelnemer_bestscore | toFloat | multiply 100 | clampMax | add 'px'" rv-animateshow="showIndivNextAthlete" rv-directhide="showIndivNextAthlete">
+				</div>
 
 				<!-- Result screen -->
 				<div class="medal green-result-mm" rv-data-resultaat="indivResult.score_resultaat" rv-style-min-width="centimeteroffset | multiply -1 | add 100 | add 'px'"
@@ -617,9 +616,7 @@
 				<!-- Result screen -->
 				<div class="athleteInfo" rv-directshow="showIndivResult" rv-animatehide="showIndivResult">
 					<span class="attempt"># {indivResult.score_poging_nummer}</span>
-					<div class="athlete">
-						{indivResult.deelnemer_rugnummer}. {indivResult.deelnemer_naam | upper}
-					</div>
+					<div class="athlete">{indivResult.deelnemer_naam | upper}</div>
 					<span class="wind" rv-show="indivResult.score_wind">{indivResult.score_wind}</span>
 				</div>
 
@@ -627,7 +624,7 @@
 				<!-- Next athlete screen -->
 				<div class="athleteInfo" rv-animateshow="showIndivNextAthlete" rv-directhide="showIndivNextAthlete">
 					<span class="attempt"># {indivNextAthlete.score_poging_nummer}</span>
-					<span class="athlete">{indivNextAthlete.deelnemer_rugnummer}. {indivNextAthlete.deelnemer_naam | upper}</span>
+					<span class="athlete">{indivNextAthlete.deelnemer_naam | upper}</span>
 				</div>
 			</div>
 
@@ -771,7 +768,8 @@
 
 				<!-- Next athlete screen -->
 				<div class="medal blue-mm typecursor" rv-data-position="indivNextAthlete.deelnemer_rank | add 'e'"
-					rv-style-left="indivNextAthlete.deelnemer_bestscore | toFloat | multiply 100 | clampMax | add 'px'" rv-animateshow="showIndivNextAthlete" rv-directhide="showIndivNextAthlete"></div>
+					rv-style-left="indivNextAthlete.deelnemer_bestscore | toFloat | multiply 100 | clampMax | add 'px'" rv-animateshow="showIndivNextAthlete" rv-directhide="showIndivNextAthlete">
+				</div>
 
 				<!-- Result screen -->
 				<div class="medal green-result-mm" rv-data-resultaat="indivResult.score_resultaat" rv-style-min-width="centimeteroffset | multiply -1 | add 100 | add 'px'"
