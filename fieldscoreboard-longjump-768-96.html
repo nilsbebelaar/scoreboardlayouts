@@ -47,15 +47,18 @@
 
 		#screen1 {
 			/* Rotated view: */
-			/* transform: rotate(90deg) translateY(calc(var(--screen_height) * -1px)); */
+			transform: rotate(90deg) translateY(calc(var(--screen_height) * -1px));
 		}
-
+		
 		#screen2 {
 			/* Normal view: */
-			transform: translateY(calc(var(--screen_height) * 1px));
+			/* transform: translateY(calc(var(--screen_height) * 1px)); */
 
 			/* Rotated view: */
 			/* transform: rotate(90deg) translateY(calc(var(--screen_height) * -2px)); */
+
+			/* Rotated view (270°): */
+			transform: rotate(270deg) translateY(calc(var(--screen_height) * 1px)) translateX(calc(var(--screen_length_meter) * var(--pixels_per_meter) * -1px))
 		}
 
 		.container {
