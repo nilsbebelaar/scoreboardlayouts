@@ -415,7 +415,7 @@
 
 <body>
 	<div id="atletieknu-settings" data-max-athletes-per-page="10" data-time-per-page="5000" data-isfieldscoreboard="1" data-time-per-initialpage="15000000000000"
-		data-force-display-result-duration="10000" data-time-display-current-ranking="5000" data-force-display-nextheight-duration="30000"></div>
+		data-force-display-result-duration="10000" data-time-display-current-ranking="5000" data-force-display-nextheight-duration="30000" style="display: none;"></div>
 	<div id="screen1">
 		<div class="container">
 			<!-- Settings -->
@@ -432,7 +432,7 @@
 				<div class="athleteInfo" rv-directshow="showIndivResult" rv-animatehide="showIndivResult">
 					<span class="attempt"># {indivResult.score_poging_nummer}</span>
 					<div class="athlete">
-						{indivResult.deelnemer_rugnummer}. {indivNextAthlete.persoonsgegeven_achternaam | upper}
+						{indivResult.deelnemer_rugnummer}. {indivResult.deelnemer_naam | upper}
 					</div>
 					<span class="wind" rv-show="indivResult.score_wind">{indivResult.score_wind}</span>
 				</div>
@@ -441,7 +441,7 @@
 				<!-- Next athlete screen -->
 				<div class="athleteInfo" rv-animateshow="showIndivNextAthlete" rv-directhide="showIndivNextAthlete">
 					<span class="attempt"># {indivNextAthlete.score_poging_nummer}</span>
-					<span class="athlete">{indivNextAthlete.deelnemer_rugnummer}. {indivNextAthlete.persoonsgegeven_achternaam | upper}</span>
+					<span class="athlete">{indivNextAthlete.deelnemer_rugnummer}. {indivNextAthlete.deelnemer_naam | upper}</span>
 				</div>
 			</div>
 
@@ -618,7 +618,7 @@
 				<div class="athleteInfo" rv-directshow="showIndivResult" rv-animatehide="showIndivResult">
 					<span class="attempt"># {indivResult.score_poging_nummer}</span>
 					<div class="athlete">
-						{indivResult.deelnemer_rugnummer}. {indivNextAthlete.persoonsgegeven_achternaam | upper}
+						{indivResult.deelnemer_rugnummer}. {indivResult.deelnemer_naam | upper}
 					</div>
 					<span class="wind" rv-show="indivResult.score_wind">{indivResult.score_wind}</span>
 				</div>
@@ -627,7 +627,7 @@
 				<!-- Next athlete screen -->
 				<div class="athleteInfo" rv-animateshow="showIndivNextAthlete" rv-directhide="showIndivNextAthlete">
 					<span class="attempt"># {indivNextAthlete.score_poging_nummer}</span>
-					<span class="athlete">{indivNextAthlete.deelnemer_rugnummer}. {indivNextAthlete.persoonsgegeven_achternaam | upper}</span>
+					<span class="athlete">{indivNextAthlete.deelnemer_rugnummer}. {indivNextAthlete.deelnemer_naam | upper}</span>
 				</div>
 			</div>
 
